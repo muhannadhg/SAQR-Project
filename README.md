@@ -24,10 +24,16 @@ BeautifulSoup: تستخدم لتحليل وتنقية نص HTML المسترجع
 
 requests: تستخدم لجلب بيانات من موقع جوجل باستخدام Google Custom Search API.
 
-للتأكد من التثبيت بشكل صحيح، قم بتشغيل الأمر التالي لكل مكتبة:
+تحذير لاجهزة الماك بوك يجب تحميل brew
+طريقة التحميل ادخل التيرمنال الذي بداخل محرر الاكواد الذي تستعمله في بايثون
+التحميل من موقع : https://brew.sh/
+وعند اكتمال التحميل يجب تحميل portaudio :
+
+        brew install portaudio
+ولتحميل المكتبات اكتب الامر التالي في التيرمنل الخاص بمحرر الاكواد الذي تستعمله في بايثون:
 
 
-        pip install speechrecognition gtts pywhatkit wikipedia-api beautifulsoup4 requests
+        pip install speechrecognition gtts pywhatkit wikipedia-api beautifulsoup4 requests pyaudio
 
 شرح وظائف البرنامج:
 
