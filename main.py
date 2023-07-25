@@ -39,9 +39,18 @@ def print_saqr_output(text,not_r=0):
 # وذي الكلامات المفتاحية او مدي وش تسمى ازبده هذا يعرف وش انت تبي من صقر
 def process_key_words(key_words):
     if "شغل" in key_words:
-        search_query = key_words.replace("شغل", "")
-        print_saqr_output(f"جاري البحث عن{search_query} على اليوتيوب.")
-        kit.playonyt(search_query)
+        if "برنامج التعرف على الوجه" in key_words:
+            print_saqr_output("جاري فتح برنامج التعرف على الوجه...")
+            python_program_path = "main2.py"
+            try:
+                os.system(f"python {python_program_path}")
+            except FileNotFoundError:
+                print_saqr_output("لم يتم العثور على برنامج التعرف على الوجه.")
+                return
+        else:
+            search_query = key_words.replace("شغل", "")
+            print_saqr_output(f"جاري البحث عن{search_query} على اليوتيوب.")
+            kit.playonyt(search_query)
     elif "تحبني" in key_words:
         print_saqr_output("لا")
     elif "انت افضل" in key_words:
@@ -133,7 +142,6 @@ def lisn_for_key_wordss():
             recognizer.adjust_for_ambient_noise(source, duration=1)
             audio = recognizer.listen(source)
 
-        try:
             print("جاري التعرف على الصوت...")
             key_words = recognizer.recognize_google(audio, language="ar")
             print_user_input(key_words)
@@ -145,7 +153,6 @@ def lisn_for_key_wordss():
                 if wake_word_detected or "صقر" in key_words:
                     index = key_words.index("صقر")
                     key_words = key_words[index:]
-                    print(key_words)
                     if "صقر" in key_words and "ص" == key_words[0]:
                         replace_saqr = key_words.replace("صقر", "", 1)
                         process_key_words(replace_saqr)
@@ -153,12 +160,6 @@ def lisn_for_key_wordss():
                         print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر",1)
                 else:
                     print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر",1)
-                    pass
-
-        except sr.UnknownValueError:
-            print("لم أتمكن من التعرف على الصوت.")
-        except sr.RequestError as e:
-            print(f"حدث خطأ أثناء الطلب من خدمة التعرف على الصوت؛ {e}")
 
 
 def start_listening():
@@ -211,11 +212,11 @@ def lisn_for_key_wordss():
                     pass
 
         except sr.UnknownValueError:
-            print("لم أتمكن من التعرف على الصوت.")
+            pass
         except sr.RequestError as e:
-            print(f"حدث خطأ أثناء الطلب من خدمة التعرف على الصوت؛ {e}")
+            pass
         finally:
-            emoji_label.config(text="🎙")  # عرض الإيموجي لطلب الكلام مرة أخرى
+            emoji_label.config(text="🎙")
 
 
 # هذا يعرض كلامك بينك وبين صويقر❤️
