@@ -39,15 +39,6 @@ def print_saqr_output(text,not_r=0):
 # وذي الكلامات المفتاحية او مدي وش تسمى ازبده هذا يعرف وش انت تبي من صقر
 def process_key_words(key_words):
     if "شغل" in key_words:
-        if "برنامج التعرف على الوجه" in key_words:
-            print_saqr_output("جاري فتح برنامج التعرف على الوجه...")
-            python_program_path = "main2.py"
-            try:
-                os.system(f"python {python_program_path}")
-            except FileNotFoundError:
-                print_saqr_output("لم يتم العثور على برنامج التعرف على الوجه.")
-                return
-        else:
             search_query = key_words.replace("شغل", "")
             print_saqr_output(f"جاري البحث عن{search_query} على اليوتيوب.")
             kit.playonyt(search_query)
