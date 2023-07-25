@@ -47,7 +47,7 @@ https://visualstudio.microsoft.com/visual-cpp-build-tools/
 https://stackoverflow.com/questions/64261546/how-to-solve-error-microsoft-visual-c-14-0-or-greater-is-required-when-inst
 
 
-وعند اكتمال التحميل يجب تحميل من موجه الاوامر (cmd) الذي بجهازك ويجب عند تشغيل التيرمنل تشغله (كامسؤل)  :
+وعند اكتمال التحميل يجب تحميل من موجه الاوامر (cmd) الذي بجهازك ويجب عند تشغيله تشغله (كامسؤل)  :
 
          choco install ffmpeg-full
 
