@@ -10,6 +10,7 @@ import threading # هذا شفتو اذا جاء ينطق البرنامج كا�
 import subprocess # وذا سالفته طويل بس بختصار عشان جهازي ماك هو الي يشغل الفيديو
 from pydub import AudioSegment
 import simpleaudio as sa
+from translate import Translator #هذا مكتبة يترجم الكلام ، واستخدمتها عشان يترجم اسم الفلم
 
 # دالة لتحويل ملف mp3 إلى wave
 def mp3_to_wave(mp3_file, wave_file):
@@ -79,6 +80,47 @@ def process_key_words(key_words):
             print_saqr_output("لم يتم العثور على مشغل فيديو مناسب.")
     elif "من انت" in key_words:
         print_saqr_output("انا برنامج تم تطويري من قبل مهند الحقباني وتم ربطي مع ويكبيديا ومع محرك البحث قوقل")
+
+        elif "شوف لي" in key_words:
+
+
+
+            search_query = key_words.replace("شوف لي", "")
+            print_saqr_output(f"جاري البحث عن{search_query} على اي ام دي بي.")
+
+            translator = Translator(from_lang="ar", to_lang="en")
+            translation = translator.translate(search_query)
+            print_saqr_output(translation)
+
+            url = "https://online-movie-database.p.rapidapi.com/auto-complete"
+
+            querystring = {"q": translation}
+
+            api_key = {
+                "X-RapidAPI-Key": "20cddadde1msh9f461035256fe15p16e203jsn78eb1dac15bf",
+                "X-RapidAPI-Host": "online-movie-database.p.rapidapi.com"
+            }
+
+            response = requests.get(url, headers=api_key, params=querystring)
+            data=response.json()
+            print(response.json())
+            rank=data["d"][0]["rank"]
+            s=data["d"][0]["s"]
+            y=data["d"][0]["y"]
+            print_saqr_output(f"ترتيب الفلم هو {rank}")
+            print_saqr_output(f"ابطال الفلم هم {s}",1)
+            print_saqr_output(f"سنة تصنيع الفلم هي {y}")
+    elif "ابحث" in key_words:
+        person_query = key_words.replace("ابحث", "")
+
+        def search_google(query, api_key, cx):
+            base_url = "https://www.googleapis.com/customsearch/v1"
+            params = {
+                "key": api_key,
+                "cx": cx,
+                "q": query
+            }
+
     elif "ابحث" in key_words:
         person_query = key_words.replace("ابحث", "")
 
