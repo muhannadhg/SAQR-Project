@@ -26,6 +26,7 @@ BeautifulSoup: تستخدم لتحليل وتنقية نص HTML المسترجع
 
 requests: تستخدم لجلب بيانات من موقع جوجل باستخدام Google Custom Search API.
 
+py-translate هذا مكتبة يترجم الكلام ، واستخدمتها عشان يترجم اسم الفلم
 تحذير   ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️                      
 
 لاجهزة الماك بوك
@@ -72,7 +73,10 @@ https://stackoverflow.com/questions/64261546/how-to-solve-error-microsoft-visual
 ولتحميل المكتبات اكتب الامر التالي في التيرمنل الخاص بمحرر الاكواد الذي تستعمله في بايثون:
 
 
-        pip install speechrecognition gtts pywhatkit wikipedia-api beautifulsoup4 requests pyaudio
+        pip install speechrecognition gtts pywhatkit wikipedia-api beautifulsoup4 requests pyaudio py-translate
+
+
+
 
 شرح وظائف البرنامج:
 
