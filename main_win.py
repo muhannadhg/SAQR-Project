@@ -81,7 +81,7 @@ def process_key_words(key_words):
     elif "من انت" in key_words:
         print_saqr_output("انا برنامج تم تطويري من قبل مهند الحقباني وتم ربطي مع ويكبيديا ومع محرك البحث قوقل")
 
-        elif "شوف لي" in key_words:
+    elif "شوف لي" in key_words:
 
 
 
@@ -110,6 +110,7 @@ def process_key_words(key_words):
             print_saqr_output(f"ترتيب الفلم هو {rank}")
             print_saqr_output(f"ابطال الفلم هم {s}",1)
             print_saqr_output(f"سنة تصنيع الفلم هي {y}")
+        
     elif "ابحث" in key_words:
         person_query = key_words.replace("ابحث", "")
 
@@ -119,7 +120,7 @@ def process_key_words(key_words):
                 "key": api_key,
                 "cx": cx,
                 "q": query
-            }
+            }    
 
     elif "ابحث" in key_words:
         person_query = key_words.replace("ابحث", "")
