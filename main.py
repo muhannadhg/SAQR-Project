@@ -146,7 +146,7 @@ def process_key_words(key_words):
                 'type': 'search',
                 'amazon_domain': 'amazon.sa',
                 'search_term': search_query,
-                'sort_by': 'price_high_to_low',
+                'sort_by': 'featured',
                 'language': 'ar_SA',
                 'currency': 'sar',
                 'output': 'json'
