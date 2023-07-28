@@ -135,6 +135,70 @@ def process_key_words(key_words):
             response = requests.get(poster_url)
             img = Image.open(BytesIO(response.content))
             img.show()
+        
+    elif "اسم المنتج" in key_words:
+
+            search_query = key_words.replace("اسم المنتج", "")
+            print_saqr_output(f"جاري البحث عن{search_query} على amazon.")
+
+            params = {
+                'api_key': '42BE4EBED3F64E438E73820838E9F149',
+                'type': 'search',
+                'amazon_domain': 'amazon.sa',
+                'search_term': search_query,
+                'sort_by': 'price_high_to_low',
+                'language': 'ar_SA',
+                'currency': 'sar',
+                'output': 'json'
+            }
+
+            api_result = requests.get('https://api.rainforestapi.com/request', params)
+
+            res = api_result.json()
+
+            x = 0
+            while x < 3:
+                try:
+                    if(x == 0):
+                        data = res["search_results"][x]
+                        print(data)
+                        title = data["title"]
+                        print_saqr_output(f"اسم المنتج : {title}")
+
+                        rating = data["rating"]
+                        print_saqr_output(f"تقييم المنتج : {rating}")
+
+                        ratings_total = data["ratings_total"]
+                        print_saqr_output(f"عدد المقيمين المنتج : {ratings_total}", 1)
+
+                        prices = data["prices"][0]["name"]
+                        print_saqr_output(f"سعر المنتج : {prices}")
+
+                        link = data["link"]
+                        print_saqr_output(f"رابط المنتج : {link}", 1)
+                    else:
+                        data = res["search_results"][x]
+                        print(data)
+                        title = data["title"]
+                        print_saqr_output(f"اسم المنتج : {title}",1)
+
+                        rating = data["rating"]
+                        print_saqr_output(f"تقييم المنتج : {rating}",1)
+
+                        ratings_total = data["ratings_total"]
+                        print_saqr_output(f"عدد المقيمين المنتج : {ratings_total}", 1)
+
+                        prices = data["prices"][0]["name"]
+                        print_saqr_output(f"سعر المنتج : {prices}",1)
+
+                        link = data["link"]
+                        print_saqr_output(f"رابط المنتج : {link}", 1)
+
+                    x += 1
+                except KeyError as ke:
+                    print('اعتذر لا استطيع جلب المزيد من العلومات')
+                    break
+                    
     elif "ابحث" in key_words:
         person_query = key_words.replace("ابحث", "")
 
