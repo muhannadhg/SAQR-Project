@@ -304,6 +304,107 @@ root.geometry("800x600")
 emoji_label = tk.Label(root, text="جاري التحميل ..... (للبدء قل صقر)", font=("Arial", 60))
 emoji_label.pack(side="bottom", pady=20)
 
+# Entry field to receive the national address
+national_address_entry = tk.Entry(root, font=("Arial", 25))
+national_address_entry.pack(fill="x", padx=20, pady=10)
+
+def get_national_address():
+    api_key = "c1dbaa243a974f619b50f429d1cbd571"
+    addressstring = national_address_entry.get()  # Get the user input from the entry field
+    if (addressstring == ""):
+        print_saqr_output("ادخل في الاعلى العنوان الوطني")
+        pass
+    else:
+        base_url = "https://apina.address.gov.sa/NationalAddress/v3.1/Address/address-free-text"
+        addressstring = {
+            "addressstring": addressstring
+        }
+        api_key = {
+            "api_key": api_key
+        }
+
+        response = requests.get(base_url, params=addressstring, headers=api_key)
+
+        if response.status_code == 200:
+            data = response.json()
+            totalSearchResults = int(data["totalSearchResults"])
+            if totalSearchResults > 0:
+                address_details = data["Addresses"][0]
+                address_info = f"العنوان الأول: {address_details['Address1']}\n" \
+                               f"العنوان الثاني: {address_details['Address2']}\n" \
+                               f"الحي: {address_details['District']}\n" \
+                               f"المدينة: {address_details['City']}\n" \
+                               f"الرمز البريدي: {address_details['PostCode']}"
+                print_saqr_output(address_info)
+            else:
+                print_saqr_output("لم يتم العثور على نتائج للعنوان المدخل.")
+        else:
+            print_saqr_output(f"حدث خطأ في الاتصال. رمز الحالة: {response.status_code}")
+
+def get_national_address2():
+    api_key = "c1dbaa243a974f619b50f429d1cbd571"
+    addressstring = national_address_entry.get()  # Get the user input from the entry field
+    if (addressstring == ""):
+        print_saqr_output("ادخل في الاعلى العنوان الوطني")
+        pass
+    else:
+        base_url = "https://apina.address.gov.sa/NationalAddress/v3.1/Address/address-free-text"
+        addressstring = {
+            "addressstring": addressstring
+        }
+        api_key = {
+            "api_key": api_key
+        }
+
+        response = requests.get(base_url, params=addressstring, headers=api_key)
+
+        if response.status_code == 200:
+            data = response.json()
+            totalSearchResults = int(data["totalSearchResults"])
+            if totalSearchResults > 0:
+                lat = data["Addresses"][0]["Latitude"]
+                lng = data["Addresses"][0]["Longitude"]
+
+                # Open Google Maps in the default web browser with the specified location
+                maps_url = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
+                webbrowser.open(maps_url)
+            else:
+                print_saqr_output("لم يتم العثور على نتائج للعنوان المدخل.")
+        else:
+            print_saqr_output(f"حدث خطأ في الاتصال. رمز الحالة: {response.status_code}")
+
+def get_cv_name():
+    api_key = "C1vH94RqBOqceB5KLP7WXeJY5UBfXEG4"
+    cr_number = national_address_entry.get()  # Get the user input from the entry field
+    if (cr_number == ""):
+        print_saqr_output("ادخل في الاعلى السجل التجاري")
+        pass
+    else:
+        base_url = "https://api.wathq.sa/v5/commercialregistration/fullinfo/" + cr_number
+        api_key = {
+            "accept": "application/json",
+            "apiKey": api_key
+        }
+
+        response = requests.get(base_url , headers=api_key)
+
+        if response.status_code == 200:
+            data = response.json()
+            crName = data["crName"]
+            parties = data["parties"][0]["name"]
+            relation = data["parties"][0]["relation"]["name"]
+            businessType = data["businessType"]["name"]
+            status = data["status"]["name"]
+            address = data["address"]["general"]["address"]
+            print_saqr_output(f"الاسم : {crName}")
+            print_saqr_output(f"المالك : {parties}")
+            print_saqr_output(f"المنصب : {relation}")
+            print_saqr_output(f"نوع العمل : {businessType}")
+            print_saqr_output(f"حالة السجل : {status}")
+            print_saqr_output(f"الموقع الرئيسي : {address}", 1)
+        else:
+            print_saqr_output(f"حدث خطأ في الاتصال. رمز الحالة: {response.status_code}")
+
 #وذا كرفت فيه عشان بس يتغير الايموجي في الحالتين
 def lisn_for_key_wordss():
     recognizer = sr.Recognizer()
@@ -331,7 +432,14 @@ def lisn_for_key_wordss():
                 if wake_word_detected or "صقر" in key_words:
                     if "صقر" in key_words and "ص" == key_words[0]:
                         replace_saqr = key_words.replace("صقر", "", 1)
-                        process_key_words(replace_saqr)
+                        if "معلومات العنوان الوطني" in replace_saqr:
+                            get_national_address()
+                        elif "حدد العنوان الوطني" in replace_saqr:
+                            get_national_address2()
+                        elif "معلومات التاجر" in replace_saqr:
+                            get_cv_name()
+                        else:
+                            process_key_words(replace_saqr)
                     else:
                         print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر",1)
                 else:
