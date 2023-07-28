@@ -1,15 +1,19 @@
-import speech_recognition as sr # هذا يحول الكلام الى نص
-from gtts import gTTS # يستخدم تقنية قوقل الي تحول النص الى كلام مجانيه طبعا
-import os # هذي اشياء في النظام مثلا يشغل صوت يحفظ ملفات الى اخره
-import pywhatkit as kit # هذي حقت اليوتيوب مدري صراحه ايش تسوي بس الى اعرفه انها تبحث في اليوتيوب وتطلع اول مقطع
-import wikipediaapi # هذي حقت ويكبيديا اذا سالت  مثلا من هو محمد بن سلمان رح يبحث في ويكبيديا وبعد كذا بيطبع لك الناتج وبينطقه الحبيب الي فوق
-from bs4 import BeautifulSoup # هذي سالفتها طويله بالمختصر شفتو ويكبيديا اذا جاء يطبع الكلام يطبعها ويضيف عليها اشياء حقت ال HTML والحبيب حق قوقل ينطقها شرطةً وسلاشً زي كذا هذا يحذفها هذي فايدته
-import requests # هذا ياطويل العمر حق ال Api سالفته يربط بين الموقعي حقي وقوقل جلب بينات فقط نقول مستقبلاً ان شاء الله نقدر نعدل مو بس نجلب
-import tkinter as tk # هذا حطيته والله بس عشان سياسة المكان (نقاط)
-import threading # هذا شفتو اذا جاء ينطق البرنامج كان يعلق الحين ذا خلها ينطق في الخلفية مايحتاج البرنامج يعلق كل مره ينطق فيها
-import subprocess # وذا سالفته طويل بس بختصار عشان جهازي ماك هو الي يشغل الفيديو
-from translate import Translator #هذا مكتبة يترجم الكلام ، واستخدمتها عشان يترجم اسم الفلم
-import webbrowser 
+import speech_recognition as sr  # هذا يحول الكلام الى نص
+from gtts import gTTS  # يستخدم تقنية قوقل الي تحول النص الى كلام مجانيه طبعا
+import os  # هذي اشياء في النظام مثلا يشغل صوت يحفظ ملفات الى اخره
+import pywhatkit as kit  # هذي حقت اليوتيوب مدري صراحه ايش تسوي بس الى اعرفه انها تبحث في اليوتيوب وتطلع اول مقطع
+import \
+    wikipediaapi  # هذي حقت ويكبيديا اذا سالت  مثلا من هو محمد بن سلمان رح يبحث في ويكبيديا وبعد كذا بيطبع لك الناتج وبينطقه الحبيب الي فوق
+from bs4 import \
+    BeautifulSoup  # هذي سالفتها طويله بالمختصر شفتو ويكبيديا اذا جاء يطبع الكلام يطبعها ويضيف عليها اشياء حقت ال HTML والحبيب حق قوقل ينطقها شرطةً وسلاشً زي كذا هذا يحذفها هذي فايدته
+import \
+    requests  # هذا ياطويل العمر حق ال Api سالفته يربط بين الموقعي حقي وقوقل جلب بينات فقط نقول مستقبلاً ان شاء الله نقدر نعدل مو بس نجلب
+import tkinter as tk  # هذا حطيته والله بس عشان سياسة المكان (نقاط)
+import \
+    threading  # هذا شفتو اذا جاء ينطق البرنامج كان يعلق الحين ذا خلها ينطق في الخلفية مايحتاج البرنامج يعلق كل مره ينطق فيها
+import subprocess  # وذا سالفته طويل بس بختصار عشان جهازي ماك هو الي يشغل الفيديو
+from translate import Translator  # هذا مكتبة يترجم الكلام ، واستخدمتها عشان يترجم اسم الفلم
+import webbrowser
 
 
 # ذا ينطق الكلام
@@ -18,14 +22,16 @@ def say(text):
     tts.save('output.mp3')
     os.system('mpg321 output.mp3')
 
-#وذا ياخذ كلام المستخدم وحطه في والجهة وينطقه
+
+# وذا ياخذ كلام المستخدم وحطه في والجهة وينطقه
 def print_user_input(text):
     output_text.tag_configure("user_tag", justify='right', foreground='#EAEAEA')
     output_text.insert("end", f"{text}\n", "user_tag")
     output_text.see("end")
 
-#وذا ياطويلين العمر نفس فكرت الي فوق بس انه للصقر مو للمستخدم
-def print_saqr_output(text,not_r=0):
+
+# وذا ياطويلين العمر نفس فكرت الي فوق بس انه للصقر مو للمستخدم
+def print_saqr_output(text, not_r=0):
     if not_r == 1:
         output_text.tag_configure("program_tag", justify='left', foreground='#B2B2B2')
         output_text.insert("end", f"{text}\n", "program_tag")
@@ -38,12 +44,13 @@ def print_saqr_output(text,not_r=0):
         output_text.see("end")
         say(text)
 
+
 # وذي الكلامات المفتاحية او مدي وش تسمى ازبده هذا يعرف وش انت تبي من صقر
 def process_key_words(key_words):
     if "شغل" in key_words:
-            search_query = key_words.replace("شغل", "")
-            print_saqr_output(f"جاري البحث عن{search_query} على اليوتيوب.")
-            kit.playonyt(search_query)
+        search_query = key_words.replace("شغل", "")
+        print_saqr_output(f"جاري البحث عن{search_query} على اليوتيوب.")
+        kit.playonyt(search_query)
     elif "تحبني" in key_words:
         print_saqr_output("لا")
     elif "انت افضل" in key_words:
@@ -65,7 +72,7 @@ def process_key_words(key_words):
             print_saqr_output("لم يتم العثور على مشغل فيديو مناسب.")
     elif "من انت" in key_words:
         print_saqr_output("انا برنامج تم تطويري من قبل مهند الحقباني وتم ربطي مع ويكبيديا ومع محرك البحث قوقل")
-        
+
     elif "وين اقرب" in key_words:
         search_query = key_words.replace("وين اقرب", "")
         print_saqr_output(f"جاري البحث عن{search_query} على قوقل ماب.")
@@ -96,109 +103,107 @@ def process_key_words(key_words):
             webbrowser.open(maps_url)
         else:
             print("Location not found.")
-            
+
     elif "شوف لي" in key_words:
 
+        search_query = key_words.replace("شوف لي", "")
+        print_saqr_output(f"جاري البحث عن{search_query} على IMDB")
 
+        translator = Translator(from_lang="ar", to_lang="en")
+        translation = translator.translate(search_query)
+        print_saqr_output(translation)
 
-            search_query = key_words.replace("شوف لي", "")
-            print_saqr_output(f"جاري البحث عن{search_query}IMDB على")
+        url = "https://online-movie-database.p.rapidapi.com/auto-complete"
 
-            translator = Translator(from_lang="ar", to_lang="en")
-            translation = translator.translate(search_query)
-            print_saqr_output(translation)
+        querystring = {"q": translation}
 
-            url = "https://online-movie-database.p.rapidapi.com/auto-complete"
+        api_key = {
+            "X-RapidAPI-Key": "20cddadde1msh9f461035256fe15p16e203jsn78eb1dac15bf",
+            "X-RapidAPI-Host": "online-movie-database.p.rapidapi.com"
+        }
 
-            querystring = {"q": translation}
+        response = requests.get(url, headers=api_key, params=querystring)
+        data = response.json()
+        print(response.json())
+        rank = data["d"][0]["rank"]
+        s = data["d"][0]["s"]
+        y = data["d"][0]["y"]
+        poster_url = data["d"][0]["i"]["imageUrl"]
 
-            api_key = {
-                "X-RapidAPI-Key": "20cddadde1msh9f461035256fe15p16e203jsn78eb1dac15bf",
-                "X-RapidAPI-Host": "online-movie-database.p.rapidapi.com"
-            }
+        print_saqr_output(f"ترتيب الفلم هو {rank}")
+        print_saqr_output(f"ابطال الفلم هم {s}", 1)
+        print_saqr_output(f"سنة تصنيع الفلم هي {y}")
+        print_saqr_output("جاري عرض صورة الفلم ........", 1)
+        from io import BytesIO
+        from PIL import Image
 
-            response = requests.get(url, headers=api_key, params=querystring)
-            data=response.json()
-            print(response.json())
-            rank=data["d"][0]["rank"]
-            s=data["d"][0]["s"]
-            y=data["d"][0]["y"]
-            poster_url = data["d"][0]["i"]["imageUrl"]
+        response = requests.get(poster_url)
+        img = Image.open(BytesIO(response.content))
+        img.show()
 
-            print_saqr_output(f"ترتيب الفلم هو {rank}")
-            print_saqr_output(f"ابطال الفلم هم {s}",1)
-            print_saqr_output(f"سنة تصنيع الفلم هي {y}")
-            print_saqr_output("جاري عرض صورة الفلم ........",1)
-            from io import BytesIO
-            from PIL import Image
-
-            response = requests.get(poster_url)
-            img = Image.open(BytesIO(response.content))
-            img.show()
-        
     elif "اسم المنتج" in key_words:
 
-            search_query = key_words.replace("اسم المنتج", "")
-            print_saqr_output(f"جاري البحث عن{search_query} على amazon.")
+        search_query = key_words.replace("اسم المنتج", "")
+        print_saqr_output(f"جاري البحث عن{search_query} على amazon")
 
-            params = {
-                'api_key': '42BE4EBED3F64E438E73820838E9F149',
-                'type': 'search',
-                'amazon_domain': 'amazon.sa',
-                'search_term': search_query,
-                'sort_by': 'featured',
-                'language': 'ar_SA',
-                'currency': 'sar',
-                'output': 'json'
-            }
+        params = {
+            'api_key': '42BE4EBED3F64E438E73820838E9F149',
+            'type': 'search',
+            'amazon_domain': 'amazon.sa',
+            'search_term': search_query,
+            'sort_by': 'featured',
+            'language': 'ar_SA',
+            'currency': 'sar',
+            'output': 'json'
+        }
 
-            api_result = requests.get('https://api.rainforestapi.com/request', params)
+        api_result = requests.get('https://api.rainforestapi.com/request', params)
 
-            res = api_result.json()
+        res = api_result.json()
 
-            x = 0
-            while x < 3:
-                try:
-                    if(x == 0):
-                        data = res["search_results"][x]
-                        print(data)
-                        title = data["title"]
-                        print_saqr_output(f"اسم المنتج : {title}")
+        x = 0
+        while x < 3:
+            try:
+                if (x == 0):
+                    data = res["search_results"][x]
+                    print(data)
+                    title = data["title"]
+                    print_saqr_output(f"اسم المنتج : {title}")
 
-                        rating = data["rating"]
-                        print_saqr_output(f"تقييم المنتج : {rating}")
+                    rating = data["rating"]
+                    print_saqr_output(f"تقييم المنتج : {rating}")
 
-                        ratings_total = data["ratings_total"]
-                        print_saqr_output(f"عدد المقيمين المنتج : {ratings_total}", 1)
+                    ratings_total = data["ratings_total"]
+                    print_saqr_output(f"عدد المقيمين المنتج : {ratings_total}", 1)
 
-                        prices = data["prices"][0]["name"]
-                        print_saqr_output(f"سعر المنتج : {prices}")
+                    prices = data["prices"][0]["name"]
+                    print_saqr_output(f"سعر المنتج : {prices}")
 
-                        link = data["link"]
-                        print_saqr_output(f"رابط المنتج : {link}", 1)
-                    else:
-                        data = res["search_results"][x]
-                        print(data)
-                        title = data["title"]
-                        print_saqr_output(f"اسم المنتج : {title}",1)
+                    link = data["link"]
+                    print_saqr_output(f"رابط المنتج : {link}", 1)
+                else:
+                    data = res["search_results"][x]
+                    print(data)
+                    title = data["title"]
+                    print_saqr_output(f"اسم المنتج : {title}", 1)
 
-                        rating = data["rating"]
-                        print_saqr_output(f"تقييم المنتج : {rating}",1)
+                    rating = data["rating"]
+                    print_saqr_output(f"تقييم المنتج : {rating}", 1)
 
-                        ratings_total = data["ratings_total"]
-                        print_saqr_output(f"عدد المقيمين المنتج : {ratings_total}", 1)
+                    ratings_total = data["ratings_total"]
+                    print_saqr_output(f"عدد المقيمين المنتج : {ratings_total}", 1)
 
-                        prices = data["prices"][0]["name"]
-                        print_saqr_output(f"سعر المنتج : {prices}",1)
+                    prices = data["prices"][0]["name"]
+                    print_saqr_output(f"سعر المنتج : {prices}", 1)
 
-                        link = data["link"]
-                        print_saqr_output(f"رابط المنتج : {link}", 1)
+                    link = data["link"]
+                    print_saqr_output(f"رابط المنتج : {link}", 1)
 
-                    x += 1
-                except KeyError as ke:
-                    print('اعتذر لا استطيع جلب المزيد من العلومات')
-                    break
-                    
+                x += 1
+            except KeyError as ke:
+                print('اعتذر لا استطيع جلب المزيد من العلومات')
+                break
+
     elif "ابحث" in key_words:
         person_query = key_words.replace("ابحث", "")
 
@@ -231,10 +236,10 @@ def process_key_words(key_words):
                 title = item.get("title", "عنوان غير متوفر")
                 link = item.get("link", "رابط غير متوفر")
                 snippet = item.get("snippet", "معلومات غير متوفرة")
-                print_saqr_output(f"نتيجة {i}:",1)
-                print_saqr_output(f"العنوان: {title}",1)
-                print_saqr_output(f"الرابط: {link}",1)
-                print_saqr_output(f"مقتطف: {snippet}",1)
+                print_saqr_output(f"نتيجة {i}:", 1)
+                print_saqr_output(f"العنوان: {title}", 1)
+                print_saqr_output(f"الرابط: {link}", 1)
+                print_saqr_output(f"مقتطف: {snippet}", 1)
                 if i == 1:
                     print_saqr_output(f"{title}", 2)
                     print_saqr_output(f"{snippet}", 2)
@@ -258,7 +263,8 @@ def process_key_words(key_words):
         print_saqr_output("اطلب غير معرف")
         pass
 
-#وذا عشان يعرف انت تبي صقر ولا تبي انساك هههههه امزح هذا بس يتاكد انك قلت صقر في البداية
+
+# وذا عشان يعرف انت تبي صقر ولا تبي انساك هههههه امزح هذا بس يتاكد انك قلت صقر في البداية
 def lisn_for_key_wordss():
     recognizer = sr.Recognizer()
     wake_word_detected = False
@@ -284,9 +290,9 @@ def lisn_for_key_wordss():
                         replace_saqr = key_words.replace("صقر", "", 1)
                         process_key_words(replace_saqr)
                     else:
-                        print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر",1)
+                        print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر", 1)
                 else:
-                    print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر",1)
+                    print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر", 1)
 
 
 def start_listening():
@@ -307,6 +313,7 @@ emoji_label.pack(side="bottom", pady=20)
 # Entry field to receive the national address
 national_address_entry = tk.Entry(root, font=("Arial", 25))
 national_address_entry.pack(fill="x", padx=20, pady=10)
+
 
 def get_national_address():
     api_key = "c1dbaa243a974f619b50f429d1cbd571"
@@ -335,11 +342,12 @@ def get_national_address():
                                f"الحي: {address_details['District']}\n" \
                                f"المدينة: {address_details['City']}\n" \
                                f"الرمز البريدي: {address_details['PostCode']}"
-                print_saqr_output(address_info)
+                print_saqr_output(address_info,1)
             else:
                 print_saqr_output("لم يتم العثور على نتائج للعنوان المدخل.")
         else:
             print_saqr_output(f"حدث خطأ في الاتصال. رمز الحالة: {response.status_code}")
+
 
 def get_national_address2():
     api_key = "c1dbaa243a974f619b50f429d1cbd571"
@@ -373,6 +381,7 @@ def get_national_address2():
         else:
             print_saqr_output(f"حدث خطأ في الاتصال. رمز الحالة: {response.status_code}")
 
+
 def get_cv_name():
     api_key = "C1vH94RqBOqceB5KLP7WXeJY5UBfXEG4"
     cr_number = national_address_entry.get()  # Get the user input from the entry field
@@ -386,7 +395,7 @@ def get_cv_name():
             "apiKey": api_key
         }
 
-        response = requests.get(base_url , headers=api_key)
+        response = requests.get(base_url, headers=api_key)
 
         if response.status_code == 200:
             data = response.json()
@@ -405,7 +414,8 @@ def get_cv_name():
         else:
             print_saqr_output(f"حدث خطأ في الاتصال. رمز الحالة: {response.status_code}")
 
-#وذا كرفت فيه عشان بس يتغير الايموجي في الحالتين
+
+# وذا كرفت فيه عشان بس يتغير الايموجي في الحالتين
 def lisn_for_key_wordss():
     recognizer = sr.Recognizer()
     wake_word_detected = False
@@ -441,9 +451,9 @@ def lisn_for_key_wordss():
                         else:
                             process_key_words(replace_saqr)
                     else:
-                        print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر",1)
+                        print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر", 1)
                 else:
-                    print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر",1)
+                    print_saqr_output("يجب قول صقر قبل اعطاء اي اوامر", 1)
                     pass
 
         except sr.UnknownValueError:
@@ -464,9 +474,8 @@ start_listening()
 # هذا عشان يبدا البرنامج وعشان بعد يتحدث كل شوي
 root.mainloop()
 
+# وبس والله البرنامج حطيت في حيلي واو تعبت قعدت عليه ساعة ونص ، وشوي عشان التطويرات
 
-#وبس والله البرنامج حطيت في حيلي واو تعبت قعدت عليه ساعة ونص ، وشوي عشان التطويرات
+# اتمني اعجبكم تقيمكم للبرنامج والي مايعجبه بالله صقر قوم اجلده
 
-#اتمني اعجبكم تقيمكم للبرنامج والي مايعجبه بالله صقر قوم اجلده
-
-#والي يشكك انه اسوء برنامج استماع حاب اقولك حتى انا مشكك
+# والي يشكك انه اسوء برنامج استماع حاب اقولك حتى انا مشكك
