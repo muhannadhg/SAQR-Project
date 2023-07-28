@@ -172,11 +172,20 @@ def process_key_words(key_words):
                     ratings_total = data["ratings_total"]
                     print_saqr_output(f"عدد المقيمين المنتج : {ratings_total}", 1)
 
-                    prices = data["prices"][0]["name"]
+                    prices = data["prices"][0]["raw"]
                     print_saqr_output(f"سعر المنتج : {prices}")
 
                     link = data["link"]
                     print_saqr_output(f"رابط المنتج : {link}", 1)
+
+                    poster_url = data["image"]
+                    from io import BytesIO
+                    from PIL import Image
+
+                    response = requests.get(poster_url)
+                    img = Image.open(BytesIO(response.content))
+                    img.show()
+
                 else:
                     data = res["search_results"][x]
                     print(data)
@@ -189,7 +198,7 @@ def process_key_words(key_words):
                     ratings_total = data["ratings_total"]
                     print_saqr_output(f"عدد المقيمين المنتج : {ratings_total}", 1)
 
-                    prices = data["prices"][0]["name"]
+                    prices = data["prices"][0]["raw"]
                     print_saqr_output(f"سعر المنتج : {prices}", 1)
 
                     link = data["link"]
