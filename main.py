@@ -69,7 +69,7 @@ def process_key_words(key_words):
 
 
             search_query = key_words.replace("شوف لي", "")
-            print_saqr_output(f"جاري البحث عن{search_query} على اي ام دي بي.")
+            print_saqr_output(f"جاري البحث عن{search_query}IMDB على")
 
             translator = Translator(from_lang="ar", to_lang="en")
             translation = translator.translate(search_query)
