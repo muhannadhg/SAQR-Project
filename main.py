@@ -90,9 +90,18 @@ def process_key_words(key_words):
             rank=data["d"][0]["rank"]
             s=data["d"][0]["s"]
             y=data["d"][0]["y"]
+            poster_url = data["d"][0]["i"]["imageUrl"]
+
             print_saqr_output(f"ترتيب الفلم هو {rank}")
             print_saqr_output(f"ابطال الفلم هم {s}",1)
             print_saqr_output(f"سنة تصنيع الفلم هي {y}")
+            print_saqr_output("جاري عرض صورة الفلم ........",1)
+            from io import BytesIO
+            from PIL import Image
+
+            response = requests.get(poster_url)
+            img = Image.open(BytesIO(response.content))
+            img.show()
     elif "ابحث" in key_words:
         person_query = key_words.replace("ابحث", "")
 
