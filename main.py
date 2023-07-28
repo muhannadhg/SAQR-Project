@@ -64,6 +64,38 @@ def process_key_words(key_words):
             print_saqr_output("لم يتم العثور على مشغل فيديو مناسب.")
     elif "من انت" in key_words:
         print_saqr_output("انا برنامج تم تطويري من قبل مهند الحقباني وتم ربطي مع ويكبيديا ومع محرك البحث قوقل")
+        
+    elif "وين اقرب" in key_words:
+        search_query = key_words.replace("وين اقرب", "")
+        print_saqr_output(f"جاري البحث عن{search_query} على قوقل ماب.")
+
+        url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
+        input_addr = search_query
+        detile = {
+            "input": input_addr,
+            "inputtype": "textquery",
+            "fields": "formatted_address,name,rating,opening_hours,geometry",
+            "language": "ar",
+            "key": "AIzaSyBRPEUwx5q0dgHdIqjp60HOSZwaE3sr8zQ"
+        }
+
+        payload = {}
+        headers = {}
+
+        response = requests.request("GET", url, params=detile, headers=headers, data=payload)
+        data = response.json()
+        print(data)
+        if "candidates" in data and data["candidates"]:
+            location = data["candidates"][0]["geometry"]["location"]
+            lat = location["lat"]
+            lng = location["lng"]
+
+            # Open Google Maps in the default web browser with the specified location
+            maps_url = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
+            webbrowser.open(maps_url)
+        else:
+            print("Location not found.")
+            
     elif "شوف لي" in key_words:
 
 
