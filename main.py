@@ -9,7 +9,7 @@ import tkinter as tk # هذا حطيته والله بس عشان سياسة ا�
 import threading # هذا شفتو اذا جاء ينطق البرنامج كان يعلق الحين ذا خلها ينطق في الخلفية مايحتاج البرنامج يعلق كل مره ينطق فيها
 import subprocess # وذا سالفته طويل بس بختصار عشان جهازي ماك هو الي يشغل الفيديو
 from translate import Translator #هذا مكتبة يترجم الكلام ، واستخدمتها عشان يترجم اسم الفلم
-import webbrowser
+import webbrowser # هذا يفتح الموقع الالكتروني مثال يفتح امازون
 
 
 # ذا ينطق الكلام
@@ -52,8 +52,8 @@ def process_key_words(key_words):
     elif "انت افضل" in key_words:
         print_saqr_output("ياحبيبي ياقلبي انتا لو تبغا عيوني اخفع امها ذحين كذا واعطيك", 1)
         os.system('mpg321 bander_r.mp3')
-    elif "عادي اجربك" in key_words or "عادي جربك" in key_words:
-        print_saqr_output("لا طبعا مهند وبس .......")
+    elif "عادي استخدمك" in key_words:
+        print_saqr_output("خذ راحتك 👋")
     elif "انتهينا" in key_words:
         print_saqr_output("ونتهينا  👋 🙁", 1)
         os.system('mpg321 srtkaif.mp3')
@@ -67,10 +67,49 @@ def process_key_words(key_words):
         except FileNotFoundError:
             print_saqr_output("لم يتم العثور على مشغل فيديو مناسب.")
     elif "من انت" in key_words:
-        print_saqr_output("انا برنامج تم تطويري من قبل مهند الحقباني وتم ربطي مع ويكبيديا ومع محرك البحث قوقل")
+        print_saqr_output("انا برنامج تم تطويري من قبل فريق صقر وتم ربطي مع جهات حكومية واخرى .....")
+    elif "افتح مقطع عن" in key_words:
+        search_query = key_words.replace("افتح مقطع عن", "")
+        print_saqr_output(f"جاري البحث عن{search_query} على تيك توك.")
+        base_url = "https://api.tikhub.io/tiktok/search_data_videos/"
 
-    elif "وين اقرب" in key_words:
-        search_query = key_words.replace("وين اقرب", "")
+        params = {
+                "keyword": search_query,
+                "count": 1,
+                "region": "SA",
+                "language": "ar"
+        }
+
+        # API key should be passed in the request headers
+        headers = {
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIxNjAwNDAsInVzZXJuYW1lIjoibGFtdWExMTIyQGdtYWlsLmNvbSIsImVtYWlsIjoibGFtdWExMTIyQGdtYWlsLmNvbSIsImV2aWwxIjoiJDJiJDEyJC8ucFNreE5uVzJKOTJ4eWd5NkxSdU9LM2I2bUZPMzRqUFBCQ2Z6N0JGNExucWFUZ3VBcmdxIn0.jm7ljqJoeFCan3nDjAXgIYYeKCDY0Uaac1df0xHN-iI"
+        }
+
+        response = requests.get(base_url, params=params, headers=headers)
+
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                print(data)
+                id = data["data_list"][0]["id"]
+                print(id)
+                maps_url = f"https://www.tiktok.com/@none/video/{id}"
+                webbrowser.open(maps_url)
+            except:
+                pass
+        else:
+                translator = Translator(from_lang="ar", to_lang="en")
+                translation = translator.translate(search_query)
+                maps_url = f"https://www.tiktok.com/search?q={translation}"
+                webbrowser.open(maps_url)
+
+    elif "وين اقرب" in key_words or "حدد على" in key_words or "حدد" in key_words:
+        if "وين اقرب" in key_words:
+            search_query = key_words.replace("وين اقرب", "")
+        elif "حدد على" in key_words:
+            search_query = key_words.replace("حدد على", "")
+        elif "حدد" in key_words:
+            search_query = key_words.replace("حدد", "")
         print_saqr_output(f"جاري البحث عن{search_query} على قوقل ماب.")
 
         url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
@@ -100,14 +139,19 @@ def process_key_words(key_words):
         else:
             print("Location not found.")
 
-    elif "شوف لي" in key_words:
+    elif "شوف لي" in key_words or "شفلي" in key_words or "شوفي" in key_words:
 
-        search_query = key_words.replace("شوف لي", "")
+        if("شوف لي" in key_words):
+            search_query = key_words.replace("شوف لي", "")
+        elif "شفلي" in key_words:
+            search_query = key_words.replace("شفلي", "")
+        elif "شوفي" in key_words:
+            search_query = key_words.replace("شوفي", "")
+
         print_saqr_output(f"جاري البحث عن{search_query} على IMDB")
 
         translator = Translator(from_lang="ar", to_lang="en")
         translation = translator.translate(search_query)
-        print_saqr_output(translation)
 
         url = "https://online-movie-database.p.rapidapi.com/auto-complete"
 
@@ -121,21 +165,60 @@ def process_key_words(key_words):
         response = requests.get(url, headers=api_key, params=querystring)
         data = response.json()
         print(response.json())
-        rank = data["d"][0]["rank"]
-        s = data["d"][0]["s"]
-        y = data["d"][0]["y"]
-        poster_url = data["d"][0]["i"]["imageUrl"]
+        try:
+            l = data["d"][0]["l"]
+            rank = data["d"][0]["rank"]
+            s = data["d"][0]["s"]
+            y = data["d"][0]["y"]
+            poster_url = data["d"][0]["i"]["imageUrl"]
 
-        print_saqr_output(f"ترتيب الفلم هو {rank}")
-        print_saqr_output(f"ابطال الفلم هم {s}", 1)
-        print_saqr_output(f"سنة تصنيع الفلم هي {y}")
-        print_saqr_output("جاري عرض صورة الفلم ........", 1)
-        from io import BytesIO
-        from PIL import Image
+            print_saqr_output(l)
+            print_saqr_output(f"الترتيب هو {rank}")
+            print_saqr_output(f"الابطال هم {s}", 1)
+            print_saqr_output(f"سنة التصنيع هي {y}")
+            print_saqr_output("جاري عرض صورة ........", 1)
+            from io import BytesIO
+            from PIL import Image
 
-        response = requests.get(poster_url)
-        img = Image.open(BytesIO(response.content))
-        img.show()
+            response = requests.get(poster_url)
+            img = Image.open(BytesIO(response.content))
+            img.show()
+            print_saqr_output("جاري البحث عنه في TikTok ........")
+
+            base_url = "https://api.tikhub.io/tiktok/search_data_videos/"
+
+            params = {
+                "keyword": l,
+                "count": 1,
+                "region": "SA",
+                "language": "ar"
+            }
+
+            # API key should be passed in the request headers
+            headers = {
+                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIxNjAwNDAsInVzZXJuYW1lIjoibGFtdWExMTIyQGdtYWlsLmNvbSIsImVtYWlsIjoibGFtdWExMTIyQGdtYWlsLmNvbSIsImV2aWwxIjoiJDJiJDEyJC8ucFNreE5uVzJKOTJ4eWd5NkxSdU9LM2I2bUZPMzRqUFBCQ2Z6N0JGNExucWFUZ3VBcmdxIn0.jm7ljqJoeFCan3nDjAXgIYYeKCDY0Uaac1df0xHN-iI"
+            }
+
+            response = requests.get(base_url, params=params, headers=headers)
+
+            if response.status_code == 200:
+                data = response.json()
+                print(data)
+                id = data["data_list"][0]["id"]
+                print(id)
+                maps_url = f"https://www.tiktok.com/@none/video/{id}"
+                webbrowser.open(maps_url)
+            else:
+                maps_url = f"https://www.tiktok.com/search?q={l}"
+                webbrowser.open(maps_url)
+        except:
+            print_saqr_output(f"لم استطع جلب المزيد من المعلومات عن {translation}", 1)
+
+            print_saqr_output("جاري البحث عنه في TikTok ........")
+
+            maps_url = f"https://www.tiktok.com/search?q={translation}"
+            webbrowser.open(maps_url)
+            pass
 
     elif "اسم المنتج" in key_words:
 
@@ -164,7 +247,7 @@ def process_key_words(key_words):
                     data = res["search_results"][x]
                     print(data)
                     title = data["title"]
-                    print_saqr_output(f"اسم المنتج : {title}")
+                    print_saqr_output(f"اسم المنتج : {title}", 1)
 
                     rating = data["rating"]
                     print_saqr_output(f"تقييم المنتج : {rating}")
@@ -176,7 +259,14 @@ def process_key_words(key_words):
                     print_saqr_output(f"سعر المنتج : {prices}")
 
                     link = data["link"]
-                    print_saqr_output(f"رابط المنتج : {link}", 1)
+                    # اختصار الرابط
+
+                    import pyshorteners
+
+                    s = pyshorteners.Shortener()
+                    short_url = s.tinyurl.short(link)
+
+                    print_saqr_output(f"رابط المنتج : \n {short_url}", 1)
 
                     poster_url = data["image"]
                     from io import BytesIO
@@ -202,11 +292,18 @@ def process_key_words(key_words):
                     print_saqr_output(f"سعر المنتج : {prices}", 1)
 
                     link = data["link"]
-                    print_saqr_output(f"رابط المنتج : {link}", 1)
+                    # اختصار الرابط
+
+                    import pyshorteners
+
+                    s = pyshorteners.Shortener()
+                    short_url = s.tinyurl.short(link)
+
+                    print_saqr_output(f"رابط المنتج : \n {short_url}", 1)
 
                 x += 1
             except KeyError as ke:
-                print('اعتذر لا استطيع جلب المزيد من العلومات')
+                print_saqr_output('اعتذر لا استطيع جلب المزيد من العلومات')
                 break
 
     elif "ابحث" in key_words:
@@ -305,15 +402,38 @@ def start_listening():
     lisn_for_key_wordss_thread.daemon = True
     lisn_for_key_wordss_thread.start()
 
-
 # هذا حق  Tkinter
 root = tk.Tk()
 root.title("صقر Project")
 root.geometry("800x600")
 
+
+from tkmacosx import Button
+
+
+button_frame = tk.Frame(root)
+button_frame.pack(side="bottom", pady=20)
+
+def close():
+    root.destroy()
+
+bu = Button(button_frame, text="إغلاق", command=close, fg="white", bg="#980723", borderless=1)
+bu.pack(side="left",anchor="se", padx=1, pady=3, ipadx=2, ipady=3)
+
+def cancel():
+    import sys
+    print_saqr_output("جاري إعادة التشغيل...", 1)
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+
+bu2 = Button(button_frame, text="إعادة تشغيل", command=cancel, fg="white", bg="#f27b12", borderless=1)
+bu2.pack(side="right",anchor="sw", padx=1, pady=3, ipadx=2, ipady=3)
+
+
+
 # هذا يحط لك emoji تحت
-emoji_label = tk.Label(root, text="جاري التحميل ..... (للبدء قل صقر)", font=("Arial", 60))
-emoji_label.pack(side="bottom", pady=20)
+emoji_label = tk.Label(button_frame, text="للبدء قل صقر", font=("Arial", 60))
+emoji_label.pack(side="left", padx=160, pady=10)
 
 # Entry field to receive the national address
 national_address_entry = tk.Entry(root, font=("Arial", 25))
@@ -433,20 +553,34 @@ def lisn_for_key_wordss():
 
         try:
             print("جاري التعرف على الصوت...")
-            emoji_label.config(text="⏳")  # عرض الإيموجي للتعرف على الصوت
+            emoji_label.config(text="⏳", padx=101)  # عرض الإيموجي للتعرف على الصوت
             key_words = recognizer.recognize_google(audio, language="ar")
             if "صقر" in key_words:
-                index = key_words.index("صقر")
-                key_words = key_words[index:]
+                while "صقر" in key_words:
+                    parts = key_words.split("صقر", 1)  # تقسيم النص إلى جزئين، الجزء الأول قبل "صقر" والجزء الثاني بعد "صقر"
+                    key_words = "صقر".join(parts[1:])
+                    if "صقر" not in key_words:
+                        key_words = "صقر" + "صقر".join(parts[1:])
+                        break
+                    print(key_words)
                 print_user_input(key_words)
 
-            if "صقر" in key_words and len(key_words) < 9:
+            if "صقر" in key_words and len(key_words) < 5:
                 wake_word_detected = True
                 print_saqr_output("اهلا بك!")
             else:
                 if wake_word_detected or "صقر" in key_words:
-                    if "صقر" in key_words and "ص" == key_words[0]:
-                        replace_saqr = key_words.replace("صقر", "", 1)
+                    if "صقر" in key_words:
+                        parts = key_words.split("صقر", 1)  # تقسيم النص إلى جزئين، الجزء الأول قبل "صقر" والجزء الثاني بعد "صقر"
+                        replace_saqr = "صقر".join(parts[1:])
+                        replace_saqr = replace_saqr.replace("صقر", "", 1)
+                        while "صقر" in replace_saqr:
+                            parts = key_words.split("صقر", 1)  # تقسيم النص إلى جزئين، الجزء الأول قبل "صقر" والجزء الثاني بعد "صقر"
+                            replace_saqr = "صقر".join(parts[1:])
+                            replace_saqr = replace_saqr.replace("صقر", "", 1)
+                            if "صقر" not in replace_saqr:
+                                break
+                        print(replace_saqr)
                         if "معلومات العنوان الوطني" in replace_saqr:
                             get_national_address()
                         elif "حدد العنوان الوطني" in replace_saqr:
@@ -466,7 +600,7 @@ def lisn_for_key_wordss():
         except sr.RequestError as e:
             pass
         finally:
-            emoji_label.config(text="🎙")
+            emoji_label.config(text="🎙", padx=101)
 
 
 # هذا يعرض كلامك بينك وبين صويقر❤️
