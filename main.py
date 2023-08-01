@@ -305,7 +305,23 @@ def process_key_words(key_words):
             except KeyError as ke:
                 print_saqr_output('اعتذر لا استطيع جلب المزيد من العلومات')
                 break
-
+    elif "من هو" in key_words or "من هي" in key_words or "ابحث عن" in key_words:
+        if "من هو" in key_words:
+            person_query = key_words.replace("من هو", "")
+        elif "من هي" in key_words:
+            person_query = key_words.replace("من هي", "")
+        elif "ابحث عن" in key_words:
+            person_query = key_words.replace("ابحث عن", "")
+        wiki_wiki = wikipediaapi.Wikipedia(
+            language='ar', extract_format=wikipediaapi.ExtractFormat.HTML, user_agent="MyApp/1.0"
+        )
+        page = wiki_wiki.page(person_query)
+        if page.exists():
+            summary = BeautifulSoup(page.summary[:200], "html.parser").text
+            print_saqr_output(f"{person_query} هو: {summary}")
+        else:
+            print_saqr_output(f" لاتوجد معلومات {person_query}.")
+            
     elif "ابحث" in key_words:
         person_query = key_words.replace("ابحث", "")
 
@@ -349,18 +365,6 @@ def process_key_words(key_words):
 
         else:
             print_saqr_output(f" لم يتم العثور على نتائج {person_query}.")
-
-    elif "من هو" in key_words:
-        person_query = key_words.replace("من هو", "")
-        wiki_wiki = wikipediaapi.Wikipedia(
-            language='ar', extract_format=wikipediaapi.ExtractFormat.HTML, user_agent="MyApp/1.0"
-        )
-        page = wiki_wiki.page(person_query)
-        if page.exists():
-            summary = BeautifulSoup(page.summary[:200], "html.parser").text
-            print_saqr_output(f"{person_query} هو: {summary}")
-        else:
-            print_saqr_output(f" لاتوجد معلومات {person_query}.")
     else:
         print_saqr_output("اطلب غير معرف")
         pass
