@@ -11,7 +11,7 @@ import subprocess # وذا سالفته طويل بس بختصار عشان جه
 from translate import Translator #هذا مكتبة يترجم الكلام ، واستخدمتها عشان يترجم اسم الفلم
 import webbrowser # هذا يفتح الموقع الالكتروني مثال يفتح امازون
 
-
+ 
 # ذا ينطق الكلام
 def say(text):
     tts = gTTS(text=text, lang='ar')
